@@ -23,7 +23,7 @@ const resolvers = {
         },
     },
 
-    Mutations: {
+    Mutation: {
         // create user
         createUser: async (parent, args) => {
             const user = await User.create(args);
@@ -46,7 +46,7 @@ const resolvers = {
         removeBook: async (parent, { userId, bookId }) => {
             return User.findOneAndUpdate(
                 { _id: userId },
-                { $pull: { savedBooks: { _id: bookId }}},
+                { $pull: { savedBooks: { bookId: bookId }}},
                 { new: true }
             );
         },
