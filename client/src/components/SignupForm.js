@@ -41,6 +41,9 @@ const SignupForm = () => {
       setShowAlert(true);
     }
 
+    console.log(addUser)
+    console.log(userFormData)
+
     setUserFormData({
       username: '',
       email: '',

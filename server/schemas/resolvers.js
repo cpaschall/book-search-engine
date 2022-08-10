@@ -6,7 +6,8 @@ const resolvers = {
     Query: {
         me: async (parent, args, context) => {
             if (context.user) {
-              return User.findOne({ _id: context.user._id });
+              userData =  User.findOne({ _id: context.user._id });
+              return userData;
             }
             throw new AuthenticationError('You need to be logged in!');
           }
@@ -14,11 +15,12 @@ const resolvers = {
 
     Mutation: {
         // create user
-        addUser: async (parent, args) => {
-            const user = await User.create(args);
-        // addUser: async (parent, {name, email, password}) => {
-        //     const user = await User.create({name, email, password});
+        // addUser: async (parent, args) => {
+        //     const user = await User.create(args);
+        addUser: async (parent, {username, email, password}) => {
+            const user = await User.create({username, email, password});
             const token = signToken(user);
+            console.log(user, token)
             return { token, user };
             // return user;
         },
