@@ -6,7 +6,7 @@ const resolvers = {
     Query: {
         me: async (parent, args, context) => {
             if (context.user) {
-              userData =  User.findOne({ _id: context.user._id });
+              userData = User.findOne({ _id: context.user._id });
               return userData;
             }
             throw new AuthenticationError('You need to be logged in!');
@@ -26,28 +26,26 @@ const resolvers = {
         },
 
         //  save book - update user
-        saveBook: async (parent, args, context) => {
-            if (context.user) {
-                return User.findOneAndUpdate(
-                    { _id: context.user._id },
-                    { $addToSet: { savedBooks: args } },
-                    {
-                        new: true,
-                        runValidators: true,
-                    }
-                );
-            }
-            throw new AuthenticationError("User is not logged in")   
+        saveBook: async (parent, { newBook }, context) => {
+          if (context.user) {
+            const updatedUser = await User.findByIdAndUpdate(
+              { _id: context.user._id },
+              { $push: { savedBooks: newBook }},
+              { new: true }
+            );
+            return updatedUser;
+          }
+          // throw new AuthenticationError('You need to be logged in!');
         },
-
         // delete book - update user
         removeBook: async (parent, { bookId }, context) => {
             if (context.user) {
-                return User.findOneAndUpdate(
-                    { _id: context.user._Id },
-                    { $pull: { savedBooks: { bookId } } },
+                const updatedUser = await User.findByIdAndUpdate(
+                    { _id: context.user._id },
+                    { $pull: { savedBooks: { bookId }}},
                     { new: true }
-                );
+                  );
+                  return updatedUser;
             }
             throw new AuthenticationError("User is not logged in")
         },
